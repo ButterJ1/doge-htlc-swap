@@ -59,5 +59,6 @@ abstract contract Escrow is IEscrow {
         }
     }
 
+    // Allow contract to receive native tokens (safety deposit + optionally swap amount).
     receive() external payable {}
 }
