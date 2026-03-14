@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity 0.8.23
+pragma solidity 0.8.23;
 
 import { IERC20 } from "openzeppelin-contracts/contracts/token/ERC20/IERC20.sol";
-import { SafeERC20 } from "openzeppelin-contracts/contracts/token/ERC20/utils/SafeERC20.sol;
+import { SafeERC20 } from "openzeppelin-contracts/contracts/token/ERC20/utils/SafeERC20.sol";
 import { IEscrow } from "./interfaces/IEscrow.sol";
 import { Immutables } from "./libraries/ImmutablesLib.sol";
 import { Timelocks, TimelocksLib } from "./libraries/TimelocksLib.sol";
@@ -19,7 +19,7 @@ abstract contract Escrow is IEscrow {
     uint256 internal constant RESCUE_DELAY = 7 days;
 
     function _initialize(Immutables calldata immutables_) internal {
-        require(!_initislized, "already initialized");
+        require(!_initialized, "already initialized");
         _immutables = immutables_;
         _deployedAt = block.timestamp;
         _initialized = true;
@@ -41,7 +41,7 @@ abstract contract Escrow is IEscrow {
     }
 
     function _sendSafetyDeposit(address to) internal {
-        (bool, ok,) = to.call { value: _immutables.safetyDeposit }("");
+        (bool ok,) = to.call { value: _immutables.safetyDeposit }("");
         if (!ok) revert TokenTranferFailed();
     }
 
@@ -49,7 +49,7 @@ abstract contract Escrow is IEscrow {
         if (msg.sender != _immutables.taker) revert OnlyResolver();
         if (block.timestamp < _deployedAt + RESCUE_DELAY) revert TimelockNotReached();
 
-        if (token == address(0)) {
+        if (token_ == address(0)) {
             uint256 bal = address(this).balance;
             (bool ok,) = msg.sender.call { value: bal }("");
             if (!ok) revert TokenTranferFailed();

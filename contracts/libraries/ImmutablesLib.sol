@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity 0.8.23
+pragma solidity 0.8.23;
 
 import { Timelocks } from "./TimelocksLib.sol";
 
@@ -28,7 +28,7 @@ struct Immutables {
 }
 
 library ImmutablesLib {
-    function hash(Immutables memmory immutables) internal pure returns (bytes32) {
+    function hash(Immutables memory immutables) internal pure returns (bytes32) {
         return keccak256(abi.encode(immutables));
     }
 }

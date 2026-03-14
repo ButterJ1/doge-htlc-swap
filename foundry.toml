@@ -1,0 +1,23 @@
+[profile.default]
+src = "contracts"
+out = "out"
+libs = ["lib"]
+test = "test"
+script = "script"
+solc = "0.8.23"
+optimizer = true
+optimizer_runs = 1000000
+via_ir = false
+
+verbosity = 2
+
+[profile.default.fuzz]
+runs = 256
+
+[rpc_endpoints]
+sepolia = "${SEPOLIA_RPC_URL}"
+dogechain = "https://rpc.dogechain.dog"
+dogechain_testnet = "https://rpc-testnet.dogechain.dog"
+
+[etherscan]
+sepolia = { key = "${ETHERSCAN_API_KEY}", url = "https://api-sepolia.etherscan.io/api" }

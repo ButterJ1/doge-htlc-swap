@@ -1,14 +1,16 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity 0.8.23
+pragma solidity 0.8.23;
 
-import { Escrow } from "./Escrow.sol"
+import { Escrow } from "./Escrow.sol";
 import { Immutables } from "./libraries/ImmutablesLib.sol";
 import { Timelocks, TimelocksLib } from "./libraries/TimelocksLib.sol";
 
 contract EscrowDst is Escrow {
+    using TimelocksLib for Timelocks;
+
     event SecretRevealed(bytes32 secret);
 
-    function initialize(Immutables calldate immutables_) external payable {
+    function initialize(Immutables calldata immutables_) external payable {
         if (msg.value < immutables_.safetyDeposit) revert InsufficientSafetyDeposit();
         _initialize(immutables_);
     }
@@ -31,7 +33,7 @@ contract EscrowDst is Escrow {
         _checkSecret(secret);
 
         address maker = _immutables.maker;
-        address amount = _immutables.amount;
+        uint256 amount = _immutables.amount;
 
         emit Withdrawn(maker, secret);
         emit SecretRevealed(secret);
@@ -40,11 +42,11 @@ contract EscrowDst is Escrow {
         _sendSafetyDeposit(msg.sender);
     }
 
-    function publicWithdra(bytes32 secret) external {
+    function publicWithdraw(bytes32 secret) external {
         uint256 ts = block.timestamp;
         uint256 deployedAt = _deployedAt;
 
-        uint256 publicStart = _immutables.timelocks.srcPublicWithdrawalStart(deployAt);
+        uint256 publicStart = _immutables.timelocks.srcPublicWithdrawalStart(deployedAt);
         if (ts < publicStart) revert TimelockNotReached();
 
         _checkSecret(secret);

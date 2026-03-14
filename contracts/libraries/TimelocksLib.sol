@@ -1,16 +1,16 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity 0.8.23
+pragma solidity 0.8.23;
 
 type Timelocks is uint256;
 
 library TimelocksLib{
     // Bit offsets for each period inside the packed uint256.
-    uint256 private constant SRC_WITHDRAWAL_OFFSET = 192
+    uint256 private constant SRC_WITHDRAWAL_OFFSET = 192;
     uint256 private constant SRC_PUBLIC_WITHDRAWAL_OFFSET = 128;
-    uint256 private constant SRC_CANCELLATION_OFFSET = 64
+    uint256 private constant SRC_CANCELLATION_OFFSET = 64;
     uint256 private constant SRC_PUBLIC_CANCELLATION_OFFSET = 0;
 
-    uint245 private constant MASK_64 = type(uint64).max;
+    uint256 private constant MASK_64 = type(uint64).max;
 
     function build(
         uint64 srcWithdrawal,

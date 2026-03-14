@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity 0.8.23
+pragma solidity 0.8.23;
 
 import { Clones } from "openzeppelin-contracts/contracts/proxy/Clones.sol";
 import { IERC20 } from "openzeppelin-contracts/contracts/token/ERC20/IERC20.sol";
-import { SafeERC20 } from "openzeppelin-contracts/contracts/token/ERC20/utils/SafeERC20.sol;
+import { SafeERC20 } from "openzeppelin-contracts/contracts/token/ERC20/utils/SafeERC20.sol";
 import { EscrowSrc } from "./EscrowSrc.sol";
 import { EscrowDst } from "./EscrowDst.sol";
 import { Immutables, ImmutablesLib } from "./libraries/ImmutablesLib.sol";
@@ -31,7 +31,7 @@ contract EscrowFactory {
         address taker,
         address token,
         uint256 amount
-    )
+    );
 
     error ZeroAddress();
     error InsufficientNativeAmount();
@@ -50,7 +50,7 @@ contract EscrowFactory {
     }
 
     function createSrcEscrow(Immutables calldata immutables_) external payable returns (address escrow) {
-        if (immutables_.maker = address(0) || immutables_.taker == address(0)) {
+        if (immutables_.maker == address(0) || immutables_.taker == address(0)) {
             revert ZeroAddress();
         }
 
@@ -64,7 +64,7 @@ contract EscrowFactory {
         }
 
         escrow = Clones.cloneDeterministic(escrowSrcImpl, immutables_.hash());
-        EscrowSrc(payable(escrow)).initialized{ value: msg.value }(immutables_);
+        EscrowSrc(payable(escrow)).initialize{ value: msg.value }(immutables_);
 
         emit SrcEscrowCreated(
             escrow,
@@ -81,7 +81,7 @@ contract EscrowFactory {
             revert ZeroAddress();
         }
 
-        if (immutables_.token != address(0)) {
+        if (immutables_.token == address(0)) {
             if (msg.value < immutables_.amount + immutables_.safetyDeposit) {
                 revert InsufficientNativeAmount();
             }
