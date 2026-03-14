@@ -1,0 +1,22 @@
+{
+  "name": "doge-htlc-swap",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "axios": "^1.7.2",
+    "bitcoinjs-lib": "^6.1.6",
+    "bip32": "^5.0.0-rc.0",
+    "bip39": "^3.1.0",
+    "ecpair": "^2.1.0",
+    "tiny-secp256k1": "^2.2.3"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.4.0",
+    "vitest": "^1.6.0"
+  }
+}
