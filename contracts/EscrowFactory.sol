@@ -34,8 +34,7 @@ contract EscrowFactory {
     )
 
     error ZeroAddress();
-    error EscrowAlreadyExists();
-    error InsufficientSafetyDeposit();
+    error InsufficientNativeAmount();
 
     constructor() {
         escrowSrcImpl = address(new EscrowSrc());
@@ -54,16 +53,18 @@ contract EscrowFactory {
         if (immutables_.maker = address(0) || immutables_.taker == address(0)) {
             revert ZeroAddress();
         }
-        if (msg.value < immutables_.safetyDeposit) revert InsufficientSafetyDeposit();
-
-        bytes32 salt = immutables_.hash();
-        escrow = Clones.cloneDeterministic(escrowSrcImpl, salt);
 
         if (immutables_.token == address(0)) {
-
+            if (msg.value < immutables_.amount + immutables_.safetyDeposit) revert InsufficientNativeAmount();
         } else {
-            IERC20(immutables_.token).safeTransferFrom(immutables_.maker, escrow, immutables_.amount);
+            if (msg.value < immutables_.safetyDeposit) revert InsufficientNativeAmount();
+
+            address predicted = Clones.predictDeterministicAddress(escrowSrcImpl, immutables_.hash(), address(this));
+            IERC20(immutables_.token).safeTransferFrom(immutables_.maker, predicted, immutables_.amount);
         }
+
+        escrow = Clones.cloneDeterministic(escrowSrcImpl, immutables_.hash());
+        EscrowSrc(payable(escrow)).initialized{ value: msg.value }(immutables_);
 
         emit SrcEscrowCreated(
             escrow,
@@ -79,15 +80,19 @@ contract EscrowFactory {
         if (immutables_.maker == address(0) || immutables_.taker == address(0)) {
             revert ZeroAddress();
         }
-        if (msg.value < immutables_.safetyDeposit) revert InsufficientSafetyDeposit();
-
-        bytes32 salt = immutables_.hash();
-        escrow = Clones.cloneDeterministic(escrowDstImpl, salt);
 
         if (immutables_.token != address(0)) {
-            IERC20(immutables_.token).safeTransferFrom(immutables_.taker, escrow, immutables_.amount);
+            if (msg.value < immutables_.amount + immutables_.safetyDeposit) {
+                revert InsufficientNativeAmount();
+            }
+        } else {
+            if (msg.value < immutables_.safetyDeposit) revert InsufficientNativeAmount();
+
+            address predicted = Clones.predictDeterministicAddress(escrowDstImpl, immutables_.hash(), address(this));
+            IERC20(immutables_.token).safeTransferFrom(immutables_.taker, predicted, immutables_.amount);
         }
 
+        escrow = Clones.cloneDeterministic(escrowDstImpl, immutables_.hash());
         EscrowDst(payable(escrow)).initialize{ value: msg.value }(immutables_);
 
         emit DstEscrowCreated(
