@@ -46,8 +46,8 @@ contract EscrowPhase1Test is Test {
         factory = new EscrowFactory();
         token = new MockERC20();
 
-        secret = keccak256("test-secret-do-not-use-in-production");
-        hashlock = keccak256(abi.encodePacked(secret));
+        secret   = bytes32(sha256(abi.encodePacked("test-secret-do-not-use-in-production")));
+        hashlock = sha256(abi.encodePacked(secret));
 
         deal(address(token), maker, SWAP_AMOUNT * 10);
         deal(address(token), resolver, SWAP_AMOUNT * 10);

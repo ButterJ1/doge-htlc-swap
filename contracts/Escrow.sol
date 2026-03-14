@@ -26,7 +26,7 @@ abstract contract Escrow is IEscrow {
     }
 
     function _checkSecret(bytes32 secret) internal view {
-        if (keccak256(abi.encodePacked(secret)) != _immutables.hashlock) {
+        if (sha256(abi.encodePacked(secret)) != _immutables.hashlock) {
             revert InvalidSecret();
         }
     }
