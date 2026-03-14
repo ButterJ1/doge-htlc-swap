@@ -5,7 +5,7 @@ import { IERC20 } from "openzeppelin-contracts/contracts/token/ERC20/IERC20.sol"
 import { SafeERC20 } from "openzeppelin-contracts/contracts/token/ERC20/utils/SafeERC20.sol;
 import { IEscrow } from "./interfaces/IEscrow.sol";
 import { Immutables } from "./libraries/ImmutablesLib.sol";
-import { Timelocks, TImelocksLib } from "./libraries/TimelocksLib.sol";
+import { Timelocks, TimelocksLib } from "./libraries/TimelocksLib.sol";
 
 abstract contract Escrow is IEscrow {
     using SafeERC20 for IERC20;
