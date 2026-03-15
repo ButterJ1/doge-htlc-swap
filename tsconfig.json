@@ -3,12 +3,15 @@
     "target": "ES2022",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
+    "lib": ["ES2022"],
     "strict": true,
     "esModuleInterop": true,
-    "outDir": "dist",
+    "resolveJsonModule": true,
+    "outDir": "./dist",
     "rootDir": ".",
-    "declaration": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "declaration": true
   },
-  "include": ["doge/**/*.ts", "test/**/*.ts"]
+  "include": ["doge/**/*", "relayer/**/*", "test/**/*"],
+  "exclude": ["node_modules", "dist", "lib"]
 }
